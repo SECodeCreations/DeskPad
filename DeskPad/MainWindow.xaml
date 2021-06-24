@@ -8,6 +8,7 @@
         Title="DeskPad" 
         Height="800" 
         Width="1000"
+        WindowStartupLocation="CenterScreen"
         Background="#FF2D2D30">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,13 +24,13 @@
         <Button Name="NewNoteButton"
                 Grid.Column="0"
                 Grid.Row="0"
-                Width="200"
                 Height="50"
-                Margin="10"                
+                Margin="20,10,10,10"
+                HorizontalAlignment="Stretch"
                 Background="#FF686868"
                 Foreground="White"
                 Content="Add New Note"
-                FontSize="20">            
+                FontSize="20" Click="NewNoteButton_Click">            
         </Button>
 
         <Button Name="DeleteNoteButton"
@@ -39,11 +40,11 @@
                 VerticalAlignment="Center"
                 Width="200"
                 Height="50"
-                Margin="10" 
+                Margin="10,10,20,10"
                 Background="#FF686868"
                 Foreground="White"
                 Content="Delete Note"
-                FontSize="20">
+                FontSize="20" Click="DeleteNoteButton_Click">
         </Button>
 
         <Button Name="SaveNoteButton"
@@ -53,35 +54,57 @@
                 VerticalAlignment="Center"
                 Width="200"
                 Height="50"
-                Margin="10"                 
+                Margin="10,10,20,10"   
                 Background="#FF686868"
                 Foreground="White"
                 Content="Save Note"
-                FontSize="20">
+                FontSize="20" Click="SaveNoteButton_Click">
         </Button>
+
+        <Label Name="FileNameLabel"
+               Grid.Row="0"
+               Grid.Column="1"
+               Content="Untitled Note"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Left"
+               Width="500"
+               Margin="10"
+               FontSize="30"
+               Foreground="White">
+        </Label>
+               
 
         <TextBox Name="NotesTextBox"                   
                  Grid.Column="1"
                  Grid.Row="1"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
-                 Margin="10" 
+                 Margin="10,10,20,10" 
                  TextWrapping="Wrap"
                  Background="#FF3E3E42"
                  Foreground="White"
-                 BorderThickness="0"
-                 FontSize="20">
-        </TextBox>
+                 BorderThickness="1"
+                 BorderBrush="White"
+                 FontSize="20"
+                 AcceptsReturn="True"
+                 VerticalScrollBarVisibility="Auto" SelectionBrush="White" SpellCheck.IsEnabled="True" UndoLimit="1000"/>
 
-        <ListBox Name="RecentNotes"
+        <ListBox Name="RecentNotesListBox"
                  Grid.Column="0"
                  Grid.Row="1"
+                 ItemsSource="{Binding NoteModel}"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
-                 Margin="10"
+                 Margin="20,10,10,10"
                  Background="#FF3E3E42"
                  Foreground="White"
-                 BorderThickness="0">            
+                 BorderThickness="1"
+                 BorderBrush="White" SelectionMode="Single" SelectionChanged="RecentNotesListBox_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding NoteFileName}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>        
         </ListBox>
 
     </Grid>

@@ -1,0 +1,14 @@
+﻿FEATURES LIST:
+
+Add note button
+Save note button
+Delete note button
+Recent notes Listbox
+
+Autosaving feature (will autosave note after certain intervals, even if the note hasn't been saved to a file).
+Upon creating a new Note, a "temporary" file could be created (filename could perhaps be date/time stamp).
+If the Note is saved, transfer the contents to the newly created SAVED file and delete temporary file.
+
+When a saved note is opened, a "shadow copy" of the file is created and autosaved on until the file / program is closed.
+
+Upon the program closing, save the current file (if no amendments have been made since saving the note, delete the shadow copy, else keep shadow copy).
