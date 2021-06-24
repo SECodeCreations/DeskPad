@@ -26,7 +26,8 @@
                 Grid.Row="0"
                 Height="50"
                 Margin="20,10,10,10"
-                HorizontalAlignment="Stretch"
+                Width="200"
+                HorizontalAlignment="Left"
                 Background="#FF686868"
                 Foreground="White"
                 Content="Add New Note"
@@ -87,7 +88,9 @@
                  BorderBrush="White"
                  FontSize="20"
                  AcceptsReturn="True"
-                 VerticalScrollBarVisibility="Auto" SelectionBrush="White" SpellCheck.IsEnabled="True" UndoLimit="1000"/>
+                 VerticalScrollBarVisibility="Auto"
+                 SelectionBrush="White"
+                 SpellCheck.IsEnabled="True" UndoLimit="1000"/>
 
         <ListBox Name="RecentNotesListBox"
                  Grid.Column="0"
@@ -99,6 +102,7 @@
                  Background="#FF3E3E42"
                  Foreground="White"
                  BorderThickness="1"
+                 FontSize="14"
                  BorderBrush="White" SelectionMode="Single" SelectionChanged="RecentNotesListBox_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
