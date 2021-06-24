@@ -35,7 +35,6 @@ namespace DeskPad
             InitializeComponent();
             NewNoteDialog();
             WireUpLists();
-            // TODO - Load and display last opened file.
         }
 
         private void WireUpLists()
@@ -46,8 +45,7 @@ namespace DeskPad
 
         private void NewNoteButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO - check to see if the NotesTextBox is currently empty, if not then ask the user if they wish to save the file?
-
+            // Check to see if the NotesTextBox is currently empty, if not then ask the user if they wish to save the file.
             if (ValidateForm())
             {
                 MessageBoxResult result = MessageBox.Show(
@@ -58,17 +56,12 @@ namespace DeskPad
 
                 if (result == MessageBoxResult.Yes)
                 {
+                    // Open save prompt for user to save file.
                     SaveDialog();
                     NewNoteDialog();
-
-                    // TODO - open save prompt for user to save file, transfer contents from temporary or shadow copy file and delete temp file.
                 }
                 else
                 {
-                    // TODO - if a temporary file has been created, delete it.
-
-                    // TODO - Create a new temporary file (filename perhaps a datetime stamp?).
-
                     NewNoteDialog();
                 }
             }
@@ -102,15 +95,17 @@ namespace DeskPad
 
         private void SaveDialog()
         {
-            // TODO - VALIDATE FORM.
-            // TODO - Capture the content of the note and store it ready for saving.
+            // Validate Form data.
+            if (ValidateForm())
+            {
+                // Capture the content of the note and store it ready for saving.
+                NoteModel nm = new NoteModel();
+                nm.NoteContent = NotesTextBox.Text;
 
-            NoteModel nm = new NoteModel();
-            nm.NoteContent = NotesTextBox.Text;
-
-            // TODO - Open a window which prompts the user to enter a name for the file.
-            SaveWindow saveWindow = new SaveWindow(nm, this);
-            saveWindow.Show();
+                // Open a window which prompts the user to enter a name for the file.
+                SaveWindow saveWindow = new SaveWindow(nm, this);
+                saveWindow.Show();
+            }
         }
 
         private void SaveNoteButton_Click(object sender, RoutedEventArgs e)
@@ -175,7 +170,6 @@ namespace DeskPad
                     FileNameLabel.Content = currentFileOpened;
 
                     currentFileOpenedContents = File.ReadAllText(FullFilePath() + $"{nm.NoteFileName}.txt");
-
                 }
                 else
                 {
@@ -183,8 +177,6 @@ namespace DeskPad
                     currentFileOpened = nm.NoteFileName;
                     FileNameLabel.Content = currentFileOpened;
                     currentFileOpenedContents = File.ReadAllText(FullFilePath() + $"{nm.NoteFileName}.txt");
-
-
                 }
             }
 
@@ -196,7 +188,6 @@ namespace DeskPad
 
                 currentFileOpened = nm.NoteFileName;
                 FileNameLabel.Content = currentFileOpened;
-
             }
         }
 
@@ -219,5 +210,6 @@ namespace DeskPad
         {
             return $"{ ConfigurationManager.AppSettings["saveFilePath"] }\\";
         }
+
     }
 }

@@ -55,16 +55,6 @@ namespace DeskPad.DataAccess.TextHelpers
             return output;
         }
 
-
-
-
-
-
-        // TODO - Figure out how the program will handle temporary files (loading and saving).
-
-
-
-
         // TODO - Create a method to save TEMPORARY files.
 
         // TODO - Create a method to load TEMPORARY files.
