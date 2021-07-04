@@ -39,6 +39,17 @@ namespace DeskPad.DataAccess.TextHelpers
             File.WriteAllLines(fileName.FullFilePath(), lines);
         }
 
+        public static void DeleteFile(this List<NoteModel> models, string fileName)
+        {
+            foreach (NoteModel noteFile in models)
+            {
+                if (noteFile.NoteFileName == fileName)
+                {
+                    File.Delete(fileName.FullFilePath());
+                }
+            }
+        }
+
         public static List<NoteModel> ConvertToNotesListModels(this List<string> lines)
         {
             List<NoteModel> output = new List<NoteModel>();

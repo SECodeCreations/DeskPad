@@ -21,7 +21,7 @@ namespace DeskPad.DataAccess
         // Load USER-SAVED files.
         public List<NoteModel> GetNotes_All()
         {
-            List<NoteModel> people = NoteListFile.FullFilePath().LoadFile().ConvertToNotesListModels();
+            List<NoteModel> notes = NoteListFile.FullFilePath().LoadFile().ConvertToNotesListModels();
 
             return NoteListFile.FullFilePath().LoadFile().ConvertToNotesListModels();
         }
