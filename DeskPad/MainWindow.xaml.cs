@@ -22,7 +22,7 @@ namespace DeskPad
 {
     public partial class MainWindow : Window, INoteRequester
     {
-        private const string NoteListFile = "NoteListModels.csv";
+        public const string NoteListFile = "NoteListModels.csv";
         List<NoteModel> notes = NoteListFile.FullFilePath().LoadFile().ConvertToNotesListModels();
 
         bool isLoadedFile;
@@ -102,9 +102,7 @@ namespace DeskPad
 
                 // TODO - Delete note file (and any temporary / shadow copy files)
 
-                // TODO - Delete list entry for the deleted file in RecentNotesListBox.
-
-
+                // Reset the NotesTextBox to blank.
                 NotesTextBox.Text = "";
             }
             else
@@ -115,26 +113,51 @@ namespace DeskPad
 
         public void DeleteFile(List<NoteModel> model, string fileName)
         {
+            NoteModel newNoteFile = new NoteModel();
+
             foreach (NoteModel noteFile in model)
             {
                 if (noteFile.NoteFileName == fileName)
                 {
                     string fullFileName = $"{ fileName }" + ".txt";
                     File.Delete(fullFileName.FullFilePath());
+                    newNoteFile = noteFile;
                 }
-
-                UpdateFileList(noteFile);
-                NewNoteDialog();
             }
+
+            UpdateFileList(newNoteFile);
+
+            NewNoteDialog();
         }
 
         public void UpdateFileList(NoteModel model)
         {
+            // TODO - Delete list entry for the deleted file in RecentNotesListBox.
+
             // Load list of Files.
 
-            // Find the line which starts with the same number as the model.id number and delete it.
+            List<NoteModel> currentNoteList = NoteListFile.FullFilePath().LoadFile().ConvertToNotesListModels();
 
-            // Update and save the new list.            
+            NoteModel oldEntry = new NoteModel();
+
+            foreach (NoteModel e in currentNoteList)
+            {
+                if(e.Id == model.Id)
+                {
+                    oldEntry = e;
+                }
+            }
+            currentNoteList.Remove(oldEntry);
+
+            // Update and save the new list.
+            List<string> lines = new List<string>();
+
+            foreach (NoteModel e in currentNoteList)
+            {
+                lines.Add($"{e.Id},{e.NoteFileName}");
+            }
+
+            File.WriteAllLines(NoteListFile.FullFilePath(), lines);
         }
 
         private void SaveDialog()
