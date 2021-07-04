@@ -31,10 +31,10 @@ namespace DeskPad
         string currentFileOpenedContents;
 
         public MainWindow()
-        {
+        {   
             InitializeComponent();
-            NewNoteDialog();
             WireUpLists();
+            isLoadedFile = false;
         }
 
         private void WireUpLists()
@@ -46,7 +46,7 @@ namespace DeskPad
         private void NewNoteButton_Click(object sender, RoutedEventArgs e)
         {
             // Check to see if the NotesTextBox is currently empty, if not then ask the user if they wish to save the file.
-            if (ValidateForm())
+            if (NotesTextBox.Text.Length > 0 && isLoadedFile == false || isLoadedFile == true && NotesTextBox.Text != currentFileOpenedContents)
             {
                 MessageBoxResult result = MessageBox.Show(
                     "Do you wish to save the current note?",
@@ -54,16 +54,24 @@ namespace DeskPad
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
 
-                if (result == MessageBoxResult.Yes)
+                if (result == MessageBoxResult.Yes && isLoadedFile == false)
                 {
                     // Open save prompt for user to save file.
                     SaveDialog();
                     NewNoteDialog();
                 }
+                else if (result == MessageBoxResult.Yes && isLoadedFile == true)
+                {
+                    OverwriteExistingFile();
+                }
                 else
                 {
                     NewNoteDialog();
                 }
+            }
+            else
+            {
+                NewNoteDialog();
             }
         }
 
@@ -83,14 +91,50 @@ namespace DeskPad
 
             if (result == MessageBoxResult.Yes)
             {
+                NoteModel n = (NoteModel)RecentNotesListBox.SelectedItem;
+
+                if (n.NoteFileName != null)
+                {
+                    DeleteFile(notes, n.NoteFileName);
+                    notes.Remove(n);
+                    WireUpLists();
+                }
+
                 // TODO - Delete note file (and any temporary / shadow copy files)
+
                 // TODO - Delete list entry for the deleted file in RecentNotesListBox.
+
+
                 NotesTextBox.Text = "";
             }
             else
             {
                 return;
             }
+        }
+
+        public void DeleteFile(List<NoteModel> model, string fileName)
+        {
+            foreach (NoteModel noteFile in model)
+            {
+                if (noteFile.NoteFileName == fileName)
+                {
+                    string fullFileName = $"{ fileName }" + ".txt";
+                    File.Delete(fullFileName.FullFilePath());
+                }
+
+                UpdateFileList(noteFile);
+                NewNoteDialog();
+            }
+        }
+
+        public void UpdateFileList(NoteModel model)
+        {
+            // Load list of Files.
+
+            // Find the line which starts with the same number as the model.id number and delete it.
+
+            // Update and save the new list.            
         }
 
         private void SaveDialog()
@@ -142,10 +186,20 @@ namespace DeskPad
             WireUpLists();
         }
 
+        public void OverwriteExistingFile()
+        {
+            File.WriteAllText(currentFileOpened.FullFilePath() + ".txt", NotesTextBox.Text);
+        }
+
         private void RecentNotesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Get the selected List entry
             NoteModel nm = (NoteModel)RecentNotesListBox.SelectedItem;
+
+            if (nm == null)
+            {
+                return;
+            }
 
             // Get the List entry's file name
             if (nm.NoteFileName != null)
@@ -153,30 +207,50 @@ namespace DeskPad
                 loadFile = FullFilePath() + $"{nm.NoteFileName}.txt";
             }
 
-            // If the two contents do NOT match, ask the user if they wish to save changes.
-            if (!string.Equals(currentFileOpenedContents, NotesTextBox.Text))
+            // If the user has just opened the program and immediately clicks on a note from listbox (without putting any text into the NotesTextBox) just load the file (do not prompt to save).
+            if (NotesTextBox.Text.Length == 0 && isLoadedFile == false)
             {
-                MessageBoxResult result = MessageBox.Show($"Do you wish to save change to the current note?",
+                LoadExistingFile(loadFile);
+                currentFileOpened = nm.NoteFileName;
+                FileNameLabel.Content = currentFileOpened;
+
+                if (File.Exists(loadFile))
+                {
+                    currentFileOpenedContents = File.ReadAllText(FullFilePath() + $"{nm.NoteFileName}.txt");
+                }
+            }
+
+            // If the two contents do NOT match, ask the user if they wish to save changes.
+            if (!string.Equals(currentFileOpenedContents, NotesTextBox.Text) && isLoadedFile == true)
+            {
+                MessageBoxResult result = MessageBox.Show($"Do you wish to save changes to the current note?",
                     "Save changes to?",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    File.WriteAllText(currentFileOpened.FullFilePath() + ".txt", NotesTextBox.Text);
+                    OverwriteExistingFile();
 
                     LoadExistingFile(loadFile);
                     currentFileOpened = nm.NoteFileName;
                     FileNameLabel.Content = currentFileOpened;
 
-                    currentFileOpenedContents = File.ReadAllText(FullFilePath() + $"{nm.NoteFileName}.txt");
+                    if (File.Exists(loadFile))
+                    {
+                        currentFileOpenedContents = File.ReadAllText(FullFilePath() + $"{nm.NoteFileName}.txt");
+                    }
                 }
                 else
                 {
                     LoadExistingFile(loadFile);
                     currentFileOpened = nm.NoteFileName;
                     FileNameLabel.Content = currentFileOpened;
-                    currentFileOpenedContents = File.ReadAllText(FullFilePath() + $"{nm.NoteFileName}.txt");
+
+                    if (File.Exists(loadFile))
+                    {
+                        currentFileOpenedContents = File.ReadAllText(FullFilePath() + $"{nm.NoteFileName}.txt");
+                    }
                 }
             }
 
@@ -184,7 +258,11 @@ namespace DeskPad
             if (string.Equals(currentFileOpenedContents, NotesTextBox.Text, StringComparison.Ordinal))
             {
                 LoadExistingFile(loadFile);
-                currentFileOpenedContents = File.ReadAllText(FullFilePath() + $"{nm.NoteFileName}.txt");
+                if (File.Exists(loadFile))
+                {
+                    currentFileOpenedContents = File.ReadAllText(FullFilePath() + $"{nm.NoteFileName}.txt");
+
+                }
 
                 currentFileOpened = nm.NoteFileName;
                 FileNameLabel.Content = currentFileOpened;
@@ -202,7 +280,7 @@ namespace DeskPad
             }
             else
             {
-                MessageBox.Show("Cannot find that file.");
+                MessageBox.Show($"Cannot find file '{fileName}.txt'");
             }
         }
 

@@ -33,6 +33,7 @@ namespace DeskPad
             InitializeComponent();
             note = noteModel;
             callingForm = caller;
+            SaveFileNameTextBox.Focus();
         }
 
         public string FullFilePath()
