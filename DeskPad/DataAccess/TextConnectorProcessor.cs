@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 
+// Changing the namespace (adding .TextHelpers) will ensure that only files with this using statement inherit the extra stuff and eliminate any other classes from inheriting from this and getting cluttered up with the stuff that's in here (i.e. you don't want another data connector class seeing this as it would never use it).
 namespace DeskPad.DataAccess.TextHelpers
 {
-    // Changing the namespace (adding .TextHelpers) will ensure that only files with this using statement inherit the extra stuff and eliminate any other classes from inheriting from this and getting cluttered up with the stuff that's in here (i.e. you don't want another data connector class seeing this as it would never use it).
     public static class TextConnectorProcessor
     {
         public static string FullFilePath(this string saveFileName)

@@ -15,7 +15,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>            
+        <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="6*"/>
             <RowDefinition Height="*"/>
@@ -31,7 +31,7 @@
                 Background="#FF686868"
                 Foreground="White"
                 Content="Add New Note"
-                FontSize="20" Click="NewNoteButton_Click">            
+                FontSize="20" Click="NewNoteButton_Click">
         </Button>
 
         <Button Name="DeleteNoteButton"
@@ -63,17 +63,15 @@
         </Button>
 
         <Label Name="FileNameLabel"
-               Grid.Row="0"
                Grid.Column="1"
                Content="Untitled Note"
                VerticalAlignment="Center"
                HorizontalAlignment="Left"
                Width="500"
-               Margin="10"
+               Margin="10,0,0,0"
                FontSize="30"
-               Foreground="White">
-        </Label>
-               
+               Foreground="White"/>
+
 
         <TextBox Name="NotesTextBox"                   
                  Grid.Column="1"
@@ -108,9 +106,21 @@
                 <DataTemplate>
                     <TextBlock Text="{Binding NoteFileName}"/>
                 </DataTemplate>
-            </ListBox.ItemTemplate>        
+            </ListBox.ItemTemplate>
         </ListBox>
 
+        <Label Name="FilePathLabel"
+               Grid.Column="0"
+               Grid.Row="3"
+               Grid.ColumnSpan="4"
+               Content=""
+               VerticalAlignment="Center"
+               HorizontalAlignment="Left"
+               Width="750"
+               Margin="10,0,0,0"
+               FontSize="20"
+               Foreground="White"/>
+
     </Grid>
-    
+
 </Window>
