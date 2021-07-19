@@ -80,6 +80,8 @@ namespace DeskPad
             FileNameLabel.Content = "Untitled Note";
             NotesTextBox.Text = "";
             isLoadedFile = false;
+            FilePathLabel.Content = "";
+            currentFileOpenedContents = "";
         }
 
         private void DeleteNoteButton_Click(object sender, RoutedEventArgs e)
@@ -205,6 +207,7 @@ namespace DeskPad
             currentFileOpened = model.NoteFileName;
             currentFileOpenedContents = model.NoteContent;
             FileNameLabel.Content = model.NoteFileName;
+            FilePathLabel.Content = model.NoteFilePath;
             isLoadedFile = true;
             WireUpLists();
         }
@@ -228,6 +231,7 @@ namespace DeskPad
             if (nm.NoteFileName != null)
             {
                 loadFile = FullFilePath() + $"{nm.NoteFileName}.txt";
+                FilePathLabel.Content = loadFile;
             }
 
             // If the user has just opened the program and immediately clicks on a note from listbox (without putting any text into the NotesTextBox) just load the file (do not prompt to save).

@@ -45,6 +45,7 @@ namespace DeskPad
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            // Set the FileNameLabel to the saveFileName.
             string saveFileName = SaveFileNameTextBox.Text;
             string filePath = FullFilePath() + $"{saveFileName}.txt";
 
@@ -60,24 +61,21 @@ namespace DeskPad
             nm.NoteFileName = saveFileName;
 
             // Create an entry into a list to keep record of all notes saved.
-
             // Update the FileNameLabel.
-
             // Update the ListBox with new saved file.
             UpdateFileList(nm);
 
-            callingForm.SaveNoteComplete(nm);
+            // Update the FilePathLabel with the new saved file's path.
+            nm.NoteFilePath = filePath;
 
-            // Set the FileNameLabel to the saveFileName.            
+            callingForm.SaveNoteComplete(nm);
 
             // Close the form.
             this.Close();
-
         }
 
         public NoteModel UpdateFileList(NoteModel model)
         {
-            
             // Load list of Files.
             List<NoteModel> notes = NoteListFile.FullFilePath().LoadFile().ConvertToNotesListModels();
 

@@ -14,5 +14,7 @@ namespace DeskPad.Models
 
         public string NoteFileName { get; set; }
 
+        public string NoteFilePath { get; set; }
+
     }
 }
