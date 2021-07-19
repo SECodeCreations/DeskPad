@@ -45,33 +45,41 @@ namespace DeskPad
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Set the FileNameLabel to the saveFileName.
-            string saveFileName = SaveFileNameTextBox.Text;
-            string filePath = FullFilePath() + $"{saveFileName}.txt";
+            // Form validation for SaveFileNameTextBox.Text to check for any invalid file name characters.          
+            if (SaveFileNameTextBox.Text.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) != -1)
+            {
+                MessageBox.Show("This filename is not allowed, do not use invalid characters.");
+            }
+            else
+            {
+                // Set the FileNameLabel to the saveFileName.
+                string saveFileName = SaveFileNameTextBox.Text;
+                string filePath = FullFilePath() + $"{saveFileName}.txt";
 
-            // Save the contents of file using "note" notemodel.
-            NoteModel nm = note;
-            List<string> lines = new List<string>();
-            lines.Add($"{nm.NoteContent}");
+                // Save the contents of file using "note" notemodel.
+                NoteModel nm = note;
+                List<string> lines = new List<string>();
+                lines.Add($"{nm.NoteContent}");
 
-            // Save the file using "saveFileName" as the file name
-            File.WriteAllLines(filePath, lines);
+                // Save the file using "saveFileName" as the file name
+                File.WriteAllLines(filePath, lines);
 
-            // Pass the save file name so that the list of files can save it.
-            nm.NoteFileName = saveFileName;
+                // Pass the save file name so that the list of files can save it.
+                nm.NoteFileName = saveFileName;
 
-            // Create an entry into a list to keep record of all notes saved.
-            // Update the FileNameLabel.
-            // Update the ListBox with new saved file.
-            UpdateFileList(nm);
+                // Create an entry into a list to keep record of all notes saved.
+                // Update the FileNameLabel.
+                // Update the ListBox with new saved file.
+                UpdateFileList(nm);
 
-            // Update the FilePathLabel with the new saved file's path.
-            nm.NoteFilePath = filePath;
+                // Update the FilePathLabel with the new saved file's path.
+                nm.NoteFilePath = filePath;
 
-            callingForm.SaveNoteComplete(nm);
+                callingForm.SaveNoteComplete(nm);
 
-            // Close the form.
-            this.Close();
+                // Close the form.
+                this.Close();
+            }
         }
 
         public NoteModel UpdateFileList(NoteModel model)

@@ -119,6 +119,7 @@
                Width="750"
                Margin="10,0,0,0"
                FontSize="20"
+               FontStyle="Italic"
                Foreground="White"/>
 
     </Grid>
