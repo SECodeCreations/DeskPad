@@ -93,19 +93,26 @@ namespace DeskPad
 
             if (result == MessageBoxResult.Yes)
             {
-                NoteModel n = (NoteModel)RecentNotesListBox.SelectedItem;
-
-                if (n.NoteFileName != null)
+                // Check to see if the note is a saved file.
+                if (isLoadedFile)
                 {
-                    DeleteFile(notes, n.NoteFileName);
-                    notes.Remove(n);
-                    WireUpLists();
+                    NoteModel n = (NoteModel)RecentNotesListBox.SelectedItem;
+
+                    if (n.NoteFileName != null)
+                    {
+                        DeleteFile(notes, n.NoteFileName);
+                        notes.Remove(n);
+                        WireUpLists();
+                        NotesTextBox.Text = "";
+                    }
+                }
+                else
+                {
+                    NewNoteDialog();
                 }
 
                 // TODO - Delete note file (and any temporary / shadow copy files)
 
-                // Reset the NotesTextBox to blank.
-                NotesTextBox.Text = "";
             }
             else
             {
@@ -115,6 +122,7 @@ namespace DeskPad
 
         public void DeleteFile(List<NoteModel> model, string fileName)
         {
+            // Delete list entry for the deleted file in RecentNotesListBox.
             NoteModel newNoteFile = new NoteModel();
 
             foreach (NoteModel noteFile in model)
@@ -134,8 +142,6 @@ namespace DeskPad
 
         public void UpdateFileList(NoteModel model)
         {
-            // TODO - Delete list entry for the deleted file in RecentNotesListBox.
-
             // Load list of Files.
 
             List<NoteModel> currentNoteList = NoteListFile.FullFilePath().LoadFile().ConvertToNotesListModels();
