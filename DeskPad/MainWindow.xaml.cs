@@ -31,7 +31,7 @@ namespace DeskPad
         string currentFileOpenedContents;
 
         public MainWindow()
-        {   
+        {
             InitializeComponent();
             WireUpLists();
             isLoadedFile = false;
@@ -150,7 +150,7 @@ namespace DeskPad
 
             foreach (NoteModel e in currentNoteList)
             {
-                if(e.Id == model.Id)
+                if (e.Id == model.Id)
                 {
                     oldEntry = e;
                 }
@@ -253,7 +253,7 @@ namespace DeskPad
                 }
             }
 
-            // If the two contents do NOT match, ask the user if they wish to save changes.
+            // If the two contents do NOT match and current edited note is an existing file, ask the user if they wish to save changes.
             if (!string.Equals(currentFileOpenedContents, NotesTextBox.Text) && isLoadedFile == true)
             {
                 MessageBoxResult result = MessageBox.Show($"Do you wish to save changes to the current note?",
@@ -284,6 +284,34 @@ namespace DeskPad
                     {
                         currentFileOpenedContents = File.ReadAllText(FullFilePath() + $"{nm.NoteFileName}.txt");
                     }
+                }
+            }
+
+            // If the two contents do NOT match and current edited note is NOT an existing file, ask the user if they wish to save changes.
+            if (!string.Equals(currentFileOpenedContents, NotesTextBox.Text) && isLoadedFile == false)
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    "Do you wish to save the current note?",
+                    "Save note?",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes && isLoadedFile == false)
+                {
+                    // Open save prompt for user to save file.
+                    SaveDialog();
+                    NewNoteDialog();
+                }
+                else
+                {
+                    LoadExistingFile(loadFile);
+                    if (File.Exists(loadFile))
+                    {
+                        currentFileOpenedContents = File.ReadAllText(FullFilePath() + $"{nm.NoteFileName}.txt");
+
+                    }
+                    currentFileOpened = nm.NoteFileName;
+                    FileNameLabel.Content = currentFileOpened;
                 }
             }
 
