@@ -39,8 +39,14 @@ namespace DeskPad
         public string FullFilePath()
         {
             string saveFileName = SaveFileNameTextBox.Text;
+            string fullFilePath = $"{ ConfigurationManager.AppSettings["saveFilePath"] }\\";
 
-            return $"{ ConfigurationManager.AppSettings["saveFilePath"] }\\";
+            if (!Directory.Exists(ConfigurationManager.AppSettings["saveFilePath"]))
+            {
+                Directory.CreateDirectory(ConfigurationManager.AppSettings["saveFilePath"]);
+            }
+
+            return fullFilePath;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
